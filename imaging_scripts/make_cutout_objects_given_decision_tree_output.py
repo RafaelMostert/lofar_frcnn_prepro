@@ -37,27 +37,6 @@ training_mode = bool(int(argv[1]))
 
 # Assumptions
 
-# Large optical galaxy: 2MASX_size (r ext ) ≥ 60"
-MASX_size_arcsec = 60
-# Large: PyBDSF major axis > 15"
-PyBDSF_major_axis_arcsec = 15
-# Bright: total flux density > 10 mJy
-total_flux_density_in_mJy = 10
-# Isolated: distance to nearest PyBDSF neighbour (NN) > 45"
-distance_to_nearest_PyBDSF_neighbour_arcsec = 45
-# Likelyhood Ratio: LR > 0.639
-LR = 0.639
-# Clustered: distance to fourth nearest PyBDSF neighbour < 45"
-nth_neighbour = 4
-distance_to_fourth_nearest_PyBDSF_neighbour_arcsec = 45
-# LR NN > 0.639
-# S/S NN < 10
-# S + S NN ≤ 50(d NN /100 00 ) 2 mJy
-# For Cutout creation
-nn_search_radius_arcsec = 180
-nn_search_attempts = 10
-cutout_max_size_arcsec = 300
-cutout_min_size_arcsec = 60
 # Set number of cutouts to be generated
 n_cutouts = int(argv[2])
 # Set output list name
@@ -68,10 +47,7 @@ overwrite = bool(int(argv[4]))
 dataset_name = argv[5]
 # Number of fields to be included, set to infinity to include all
 n_fields = int(argv[6])
-# Do the sources in our final subset need to be large?
-must_be_large = bool(int(argv[7]))
-# Do the sources in our final subset need to be bright?
-must_be_bright = int(argv[8])
+
 if not (overwrite or not os.path.exists(list_name + '.pkl')):
     print('Source list already exists. Skipping since overwrite flag = False.')
     exit()

@@ -9,8 +9,6 @@ SAMPLE_LEN=999999999999999999999 # Limit number of sources to this number. Set v
 N_FIELDS=1 # Number of fields to include. Set to 1e9 to include all fields
 INCLUDE_LOW_SIG=1 # Determines whether low sigma sources are also labeled
 REMOVE_UNRESOLVED=1 #  0 is False; 1 is True
-MUST_BE_LARGE=1 # Require sources to be > 15 arcsec or not? [0 is False, 1 is True]
-MUST_BE_BRIGHT=-1 # Require sources to have total flux > 10mJy or not? [0 is False, 1 is True]
 #Change paths to match your setup
 CATALOGUE_PATH=/data2/mostertrij/data/catalogues
 export PROJECTPATH=/data2/mostertrij/lofar_frcnn_tools # location of project
@@ -49,8 +47,6 @@ BOX_SCALE=1 #Constant with which the bounding box will be scaled
 SIG5_ISLAND_SIZE=1 # Number of pixels that need to be above 5 sigma for component to be detected
 UNRESOLVED_THRESHOLD=0.20 # Threshold to use for Alegre's desicion tree
 PRECOMPUTED_BBOXES=1 # 0 is False; 1 is True
-MUST_BE_LARGE=1
-MUST_BE_BRIGHT=1
 CLIP=1 # Determines if the cut-outs are clipped or not
 CLIP_LOW=1 # lower clip value (sigma)
 CLIP_HIGH=30 # upper clip value (sigma)
@@ -65,8 +61,7 @@ OVERWRITE=1 # 0 is False, 1 is True
 # Where n is the number of sources that you want in the list and 'list_name.fits' is the name of the 
 # fits file that you want to produce. Change paths as needed. Edit script for different selection criteria.
 python $PROJECTPATH/imaging_scripts/make_cutout_objects_given_decision_tree_output.py $TRAINING_MODE $SAMPLE_LEN \
-    $SAMPLE_LIST 1 $DATASET_NAME $N_FIELDS $MUST_BE_LARGE \
-    $MUST_BE_BRIGHT &> logs/1inference_$DATASET_NAME.txt
+    $SAMPLE_LIST 1 $DATASET_NAME $N_FIELDS  &> logs/1inference_$DATASET_NAME.txt
 
 
 #2 - Generate cut-outs using: 
