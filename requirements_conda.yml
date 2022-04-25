@@ -1,0 +1,23 @@
+name: lofar_astro
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - matplotlib
+  - numpy
+  - pandas
+  - astropy
+  - python=3.7
+  - scikit-image
+  - astroquery
+  - photutils
+  - opencv
+  - memory_profiler
+  - astroml
+  - h5py
+  - tqdm
+  - xlrd
+  - pip:
+      - shapely
+      - tables
