@@ -34,7 +34,7 @@ TRAINING_MODE=1
 PRECOMPUTED_BBOXES=1 # 0 is False; 1 is True
 OVERWRITE=1 # 0 is False, 1 is True
 
-export PROJECTPATH=/data2/mostertrij/lofar_frcnn_tools
+export PROJECTPATH=/data2/mostertrij/lofar_frcnn_prepro
 export IMAGEDIR=/data2/mostertrij/data/frcnn_images # Where the folders with datasets will end up
 #export IMAGEDIR=/data/mostertrij/data/frcnn_images_DR1 # Where the folders with datasets will end up
 export DEBUG_PATH=/data2/mostertrij/data/frcnn_images/$DATASET_NAME/debug # Where the folders with datasets will end up
