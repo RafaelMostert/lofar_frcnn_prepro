@@ -68,9 +68,8 @@ extension_CLARAN = '.png'
 # Plot optical sources during train mode in debug images
 plot_optical = False
 root_directory_CLARAN = IMAGEDIR
-print(f'''Fixed cut-out size set to: {fixed_cutout_size}
-Include difficult sources set to: {incl_diff}
-Name of list with difficult sources: {difficult_list_name}
+print(f'''Start prepro script 4/4.
+Fixed cut-out size set to: {fixed_cutout_size}
 PNG images will be clipped: {clip}
 Lower/upper limit (sigma): {clip_low}, {clip_high}
 Final imsize in pixels {imsize}

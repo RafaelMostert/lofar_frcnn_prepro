@@ -28,6 +28,7 @@ argv[7] (bool(int))  - Get data from remote immutable data folders (1=True, 0=Fa
 """
 start = time.time()
 assert len(argv) == 8, 'Script expects 8 input arguments.'
+print("Start prepro script 1/4.")
 # MODE Training mode or Predict mode 
 training_mode = bool(int(argv[1]))
 

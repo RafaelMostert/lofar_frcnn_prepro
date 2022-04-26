@@ -28,14 +28,14 @@ os.makedirs(CUT_OUT_PATH, exist_ok=True)
 
 if __name__ == '__main__':
 
-    print("argv has length", len(argv))
-    assert len(argv) == 21, 'Script expects 20 input arguments'
+    assert len(argv) == 21, 'Script expects 20 input arguments, arv now is {len(argv)}'
 
     start = time.time()
     # Train/predict mode flag, 1 is train mode, 0 is predict mode
     training_mode = bool(int(argv[1]))
     # Overwrite flag, 1 is True, 0 is False
     overwrite = bool(int(argv[3]))
+    print("Start prepro script 3/4.")
     print(f'Overwrite flag is set to {overwrite}')
     pickle_name_labeled = argv[2] + '_labeled.pkl'
     pickle_name_labeled_annotated = argv[2] + '_labeled_annotated.pkl'
@@ -68,10 +68,17 @@ if __name__ == '__main__':
     os.makedirs(DEBUG_PATH, exist_ok=True)
     # rotation enabled?
     rotation = bool(int(argv[14]))
+    # Specify how and what rotated copies should be produced (counter-clockwise in degrees)
+    # Do not include 0. non-rotation is always included. 
+    single_comp_rotation_angles_deg = list(map(int, argv[12].split(',')))
+    multi_comp_rotation_angles_deg = list(map(int, argv[13].split(',')))
     if not training_mode:
         rotation = False
         print("Rotation is always disabled in inference mode.")
     print(f'Rotation enabled: {rotation}')
+    if rotation:
+        print("Single component rotation:", argv[12].split(','))
+        print("Multi component rotation:", argv[13].split(','))
     imsize = int(argv[15])
     imsize_arcsec = int(argv[16])
     precomputed = bool(int(argv[17]))
@@ -99,18 +106,12 @@ if __name__ == '__main__':
     label_list_dir = os.path.join(DATA_PATH, dataset_name)
     print(f'final list saved at : {label_list_dir}')
     os.makedirs(label_list_dir, exist_ok=True)
-    # Specify how and what rotated copies should be produced (counter-clockwise in degrees)
-    # Do not include 0. non-rotation is always included. 
-    print(argv[12].split(','))
-    print(argv[13].split(','))
-    single_comp_rotation_angles_deg = list(map(int, argv[12].split(',')))
-    multi_comp_rotation_angles_deg = list(map(int, argv[13].split(',')))
 
     # load fields
     fload = np.load(os.path.join(label_list_dir, 'fields.npz'))
     field_names, field_folders, field_paths, field_cats = fload['fname'], fload['ffolder'], \
                                                           fload['fpath'], fload['fcat']
-    print('Fields included in this dataset:', field_names)
+    print('Pointings included in this dataset:', field_names)
     all_fields_list = []
     cutout_n = 0
 
@@ -147,7 +148,7 @@ if __name__ == '__main__':
             print(f'Opening {pickle_path}')
             with open(pickle_path, 'rb') as input:
                 l = deepcopy(pickle.load(input))
-            print(f'Field {field_name} containing {len(l)} cutouts.')
+            print(f'Iterating over the {len(l)} cutouts in pointing {field_name}.')
 
             # Create optical cat 
             if training_mode and not 'Source_Name' in comp_cat.keys():
@@ -450,7 +451,7 @@ if __name__ == '__main__':
             with open(pickle_labeled_annotated_path, 'rb') as input:
                 l2 = pickle.load(input)
         all_fields_list += l2
-        print("all_fields:", len(all_fields_list))
+        print("In total we processed", len(all_fields_list),"cutouts.")
 
     with open(os.path.join(label_list_dir, 'labeled_annotated_cutouts.pkl'), 'wb') as output:
         pickle.dump(all_fields_list, output, pickle.HIGHEST_PROTOCOL)
@@ -459,4 +460,4 @@ if __name__ == '__main__':
 
 print(f"{image_missing} sources skipped because LoTSS-DR2 stokes I is missing.")
 print(f"{faint} sources skipped because central source is too faint.")
-print(f"Script 3 Done. Time taken: {time.time() - start:.1f}\n\n")
+print(f"Script 3 creating tight boxes around signficiant signal. Time taken: {time.time() - start:.1f}\n\n")

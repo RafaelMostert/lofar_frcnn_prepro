@@ -34,6 +34,7 @@ if __name__ == '__main__':
     rotation = bool(int(argv[8]))
     unresolved_threshold = str(argv[9])
     remove_unresolved = bool(int(argv[10]))
+    print("Start prepro script 2/4.")
     print("Path to file with names of unresolved objects:", UNRESOLVED_PATH)
     print("Remove unresolved sources is set to:", remove_unresolved)
     dataset_dir = os.path.join(imagedir, dataset_name)
