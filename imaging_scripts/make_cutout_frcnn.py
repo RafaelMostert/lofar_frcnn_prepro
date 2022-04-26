@@ -372,6 +372,7 @@ if __name__ == '__main__':
                 np.save('/data/mostertrij/lofar_frcnn_tools/keys2_cutout.npy', list(s.__slots__))
             """
 
+        print(f'Processed {len(l)} sources in this field.')
         with open(os.path.join(local_field_folder, pickle_name), 'wb') as output:
             pickle.dump(l, output, pickle.HIGHEST_PROTOCOL)
 

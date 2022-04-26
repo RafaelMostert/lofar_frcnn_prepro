@@ -141,7 +141,7 @@ for field_idx, (field_name, field_folder, local_field_folder, field_path, field_
     # Load image and raw PyBDSF source catalogue (NOT gaussians, NOT component, NOT value-added)
     source_cat = raw_cat[raw_cat.Mosaic_ID == field_name]
     if n_cutouts < len(source_cat):
-        source_cat.iloc[:n_cutouts]
+        source_cat = source_cat.iloc[:n_cutouts]
 
 
     print(f'\nField: {field_name}\nWe start out with {len(source_cat)} sources. Immutable field folder '
