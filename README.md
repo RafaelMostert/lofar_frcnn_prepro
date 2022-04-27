@@ -50,14 +50,14 @@ The scripts in this project require the following python packages:
 
 Running the bash-scripts in the create_dataset_scripts directory will sequentially run four scripts:
 
-1. imaging_scripts/multi_field_decision_tree.py
+1. imaging_scripts/make_cutout_objects.py
 2. imaging_scripts/make_cutout_frcnn.py
 3. labeling_scripts/labeler_rotation.py
 4. labeling_scripts/create_and_populate_initial_dataset_rotation.py
 
-multi_field_decision_tree.py:
-Gets a number of observing pointings to process through a bash script in ../create_datasets It filters these sources
-through a flowchart replicated from Williams et al. 2019. It turns the resulting sources into a list of cutout_object
+make_cutout_objects.py:
+Checks which observed pointings are available and also listed in the initial source catalogue and then turns
+these sources within that observed pointing into a list of cutout_object
 class objects (see ../lib/cutout_object.py)
 
 make_cutout_frcnn.py:

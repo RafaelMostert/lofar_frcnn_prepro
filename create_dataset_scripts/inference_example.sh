@@ -4,8 +4,8 @@
 #-----------------------------------------------------------------------------------
 
 # Change these variables to suit your needs
-DATASET_NAME='inference_1field_DR2'
-SAMPLE_LEN=999999999999999999999 # Limit number of sources to this number. Set very high to have no limit
+DATASET_NAME='inference_1field_DR2_test'
+SAMPLE_LEN=10 # Limit number of sources to this number. Set very high to have no limit
 N_FIELDS=1 # Number of fields to include. Set to 1e9 to include all fields
 INCLUDE_LOW_SIG=1 # Determines whether low sigma sources are also labeled
 REMOVE_UNRESOLVED=1 #  0 is False; 1 is True
@@ -59,36 +59,36 @@ REMOTE=0
 
 #1 - Make a source list: 
 # Given a source list, create source objects 
-python $PROJECTPATH/imaging_scripts/make_cutout_objects_given_decision_tree_output.py $TRAINING_MODE $SAMPLE_LEN \
+python $PROJECTPATH/imaging_scripts/make_cutout_objects.py $TRAINING_MODE $SAMPLE_LEN \
     $SAMPLE_LIST 1 $DATASET_NAME $N_FIELDS $REMOTE  &> logs/1inference_$DATASET_NAME.txt
 
 
 #2 - Generate cut-outs using: 
 #(where N and M are the index range)
 #Note: The images will be placed in the directory from which you run the commands
-echo """
+#echo """
 python -W ignore $PROJECTPATH/imaging_scripts/make_cutout_frcnn.py $TRAINING_MODE $SAMPLE_LIST $SAMPLE_LEN \
     $OVERWRITE $CUTOUT_SIZE_IN_ARCSEC $RESCALED_CUTOUT_SIZE_IN_PIXELS $DATASET_NAME $ROTATION \
     $UNRESOLVED_THRESHOLD $REMOVE_UNRESOLVED &> logs/2inference_$DATASET_NAME.txt
-"""
+#"""
 
 
 #3 - Determine box size and component numbers using: 
-echo """
+#echo """
 python $PROJECTPATH/labeling_scripts/labeler_rotation.py $TRAINING_MODE $SAMPLE_LIST $OVERWRITE \
     $EDGE_CASES $BOX_SCALE $DEBUG $SIG5_ISLAND_SIZE $INCLUDE_LOW_SIG $ALLOW_OVERLAP $INCL_DIFF \
    $DATASET_NAME $single_comp_rotation_angles_deg $multi_comp_rotation_angles_deg $ROTATION \
     $RESCALED_CUTOUT_SIZE_IN_PIXELS $CUTOUT_SIZE_IN_ARCSEC $PRECOMPUTED_BBOXES $UNRESOLVED_THRESHOLD \
         $REMOVE_UNRESOLVED  &> logs/3inference_$DATASET_NAME.txt
-"""
+#"""
 
 #4 - Create labels in XML format and structure data in correct folder hierarchy
-echo """
+#echo """
 python $PROJECTPATH/labeling_scripts/create_and_populate_initial_dataset_rotation.py \
    $FIXED_CUTOUT_SIZE $INCL_DIFF $DIFFICULT_LIST_NAME $CLIP $CLIP_LOW $CLIP_HIGH \
    $DATASET_NAME $RESCALED_CUTOUT_SIZE_IN_PIXELS $CUTOUT_SIZE_IN_ARCSEC $PRECOMPUTED_BBOXES \
    $TRAINING_MODE $REMOVE_UNRESOLVED &> logs/4inference_$DATASET_NAME.txt
-"""
+#"""
 
 #sleep 30
 #rsync -a /data2/mostertrij/data/frcnn_images/inference_$DATASET_NAME lgm4:/data1/mostertrij/data/frcnn_images
