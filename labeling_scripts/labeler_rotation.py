@@ -28,7 +28,7 @@ os.makedirs(CUT_OUT_PATH, exist_ok=True)
 
 if __name__ == '__main__':
 
-    assert len(argv) == 21, 'Script expects 20 input arguments, arv now is {len(argv)}'
+    assert len(argv) == 21, f'Script expects 20 input arguments, arv now is {len(argv)}'
 
     start = time.time()
     # Train/predict mode flag, 1 is train mode, 0 is predict mode

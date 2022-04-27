@@ -24,7 +24,7 @@ export LOTSS_COMP_CATALOGUE=$CATALOGUE_PATH/LoTSS_DR1_corrected_cat.comp.h5
 export LOTSS_SOURCE_CATALOGUE=$CATALOGUE_PATH/LoTSS_DR1_corrected_merged.h5
 export LOTSS_RAW_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v100.srl.h5
 export LOTSS_GAUSS_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v100.gaus.h5
-export LIKELY_UNRESOLVED_CATALOGUE=$CATALOGUE_PATH/GradientBoostingClassifier_A1_31504_18F_TT1234_B1_exp3_DR2.csv
+export LIKELY_UNRESOLVED_CATALOGUE=$CATALOGUE_PATH/GradientBoostingClassifier_A1_31504_18F_TT1234_B1_exp3_DR2.h5
 export OPTICAL_CATALOGUE=$CATALOGUE_PATH/combined_panstarrs_wise.h5
 export PATH=/soft/Montage_v3.3/bin:$PATH
 # Uncomment to exclude DR1 area
@@ -46,6 +46,7 @@ EDGE_CASES=0 # 0 is False, 1 is True
 DIFFICULT_LIST_NAME='difficult_1000.txt'
 BOX_SCALE=1 #Constant with which the bounding box will be scaled
 SIG5_ISLAND_SIZE=1 # Number of pixels that need to be above 5 sigma for component to be detected
+SGMA_BOX_FIT=5
 UNRESOLVED_THRESHOLD=0.20 # Threshold to use for Alegre's desicion tree
 PRECOMPUTED_BBOXES=1 # 0 is False; 1 is True
 CLIP=1 # Determines if the cut-outs are clipped or not
@@ -53,7 +54,7 @@ CLIP_LOW=1 # lower clip value (sigma)
 CLIP_HIGH=30 # upper clip value (sigma)
 DEBUG=1 # 0 is False, 1 is True
 OVERWRITE=1 # 0 is False, 1 is True
-REMOTE=0
+REMOTE=1
 ####################################
 
 
@@ -79,7 +80,7 @@ python $PROJECTPATH/labeling_scripts/labeler_rotation.py $TRAINING_MODE $SAMPLE_
     $EDGE_CASES $BOX_SCALE $DEBUG $SIG5_ISLAND_SIZE $INCLUDE_LOW_SIG $ALLOW_OVERLAP $INCL_DIFF \
    $DATASET_NAME $single_comp_rotation_angles_deg $multi_comp_rotation_angles_deg $ROTATION \
     $RESCALED_CUTOUT_SIZE_IN_PIXELS $CUTOUT_SIZE_IN_ARCSEC $PRECOMPUTED_BBOXES $UNRESOLVED_THRESHOLD \
-        $REMOVE_UNRESOLVED  &> logs/3inference_$DATASET_NAME.txt
+        $REMOVE_UNRESOLVED $SIGMA_BOX_FIT &> logs/3inference_$DATASET_NAME.txt
 #"""
 
 #4 - Create labels in XML format and structure data in correct folder hierarchy
@@ -87,7 +88,7 @@ python $PROJECTPATH/labeling_scripts/labeler_rotation.py $TRAINING_MODE $SAMPLE_
 python $PROJECTPATH/labeling_scripts/create_and_populate_initial_dataset_rotation.py \
    $FIXED_CUTOUT_SIZE $INCL_DIFF $DIFFICULT_LIST_NAME $CLIP $CLIP_LOW $CLIP_HIGH \
    $DATASET_NAME $RESCALED_CUTOUT_SIZE_IN_PIXELS $CUTOUT_SIZE_IN_ARCSEC $PRECOMPUTED_BBOXES \
-   $TRAINING_MODE $REMOVE_UNRESOLVED &> logs/4inference_$DATASET_NAME.txt
+   $TRAINING_MODE $REMOVE_UNRESOLVED $UNRESOLVED_THRESHOLD $SIGMA_BOX_FIT &> logs/4inference_$DATASET_NAME.txt
 #"""
 
 #sleep 30
