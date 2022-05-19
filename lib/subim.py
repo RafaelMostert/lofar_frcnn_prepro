@@ -82,7 +82,8 @@ def extract_subim(filename, ra, dec, size, hduid=0, verbose=True, force_132=Fals
     if verbose:
         print('Opening', filename)
     orighdu = fits.open(filename)
-    psize = int(round(size / orighdu[hduid].header['CDELT2']))  # size in pixels
+    #psize = int(round(size / orighdu[hduid].header['CDELT2']))  # size in pixels
+    psize = round(size / orighdu[hduid].header['CDELT2']/2)*2  # size in pixels
 
     if force_132 and psize != 132:
         # print('Size forcefully set to 132 pixels.')
