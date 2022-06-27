@@ -29,6 +29,11 @@ if __name__ == '__main__':
     training_mode = bool(int(argv[1]))
     # Import cut-out objects
     pickle_name = argv[2] + '.pkl'
+    # Determines the number of cut-outs to be made from given input
+    list_len = int(argv[3])
+    # Overwrite flag, 1 is True, 0 is False
+    overwrite = bool(int(argv[4]))
+    print(f'Overwrite flag is set to {overwrite}')
     final_pixel_size = int(argv[6])
     dataset_name = argv[7]
     rotation = bool(int(argv[8]))
@@ -39,9 +44,6 @@ if __name__ == '__main__':
     print("Remove unresolved sources is set to:", remove_unresolved)
     dataset_dir = os.path.join(imagedir, dataset_name)
 
-    # Overwrite flag, 1 is True, 0 is False
-    overwrite = bool(int(argv[4]))
-    print(f'Overwrite flag is set to {overwrite}')
 
     # Checks to see if a fixed box size is given or not
     if argv[5] is 0:
@@ -65,7 +67,11 @@ if __name__ == '__main__':
         # comp_name_to_source_name_dict = {n:i for i,n in zip(compcat.Source_Name.values,
         #                                                    compcat.Component_Name.values)}
     else:
-        lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
+        try: 
+            DR1_testset_inference = os.environ['DR1_TESTSET_INFERENCE']
+            lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE'], 'df')
+        except:
+            lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
         compcat = lt
 
     # Load catalogue containing likely unresolved sources to remove them later
@@ -98,8 +104,6 @@ if __name__ == '__main__':
     # Initialize coordinate dict 
     idx_dict = get_idx_dict(compcat, training_mode=training_mode)
 
-    # Determines the number of cut-outs to be made from given input
-    list_len = int(argv[3])
 
     # load fields
     fload = np.load(os.path.join(dataset_dir, 'fields.npz'))
@@ -233,12 +237,12 @@ if __name__ == '__main__':
             pvect = np.zeros((1, ndims))
             pvect[0][0] = ra
             pvect[0][1] = dec
-            # maybe the origin should be 1 here...
+            # the origin should be 1 for FITS files
             imc = wcs.wcs_world2pix(pvect, 1)
             imc0 = imc - psize / 2
-            skyc0 = wcs.wcs_pix2world(imc0, 0)
+            skyc0 = wcs.wcs_pix2world(imc0, 1)
             imc1 = imc + psize / 2
-            skyc1 = wcs.wcs_pix2world(imc1, 0)
+            skyc1 = wcs.wcs_pix2world(imc1, 1)
 
             min_RA, min_DEC = skyc1[0][0], skyc0[0][1]
             max_RA, max_DEC = skyc0[0][0], skyc1[0][1]

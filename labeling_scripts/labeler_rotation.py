@@ -95,7 +95,11 @@ if __name__ == '__main__':
     if training_mode:
         comp_cat = pd.read_hdf(os.environ['LOTSS_COMP_CATALOGUE'], 'df')
     else:
-        comp_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
+        try: 
+            DR1_testset_inference = os.environ['DR1_TESTSET_INFERENCE']
+            comp_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE'], 'df')
+        except:
+            comp_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
     if 'Source_Name' in comp_cat.keys():
         optical_cat = pd.read_hdf(os.environ['OPTICAL_CATALOGUE'], 'df')
         DR2_flag = False
@@ -111,7 +115,7 @@ if __name__ == '__main__':
     fload = np.load(os.path.join(label_list_dir, 'fields.npz'))
     field_names, field_folders, field_paths, field_cats = fload['fname'], fload['ffolder'], \
                                                           fload['fpath'], fload['fcat']
-    print('Pointings included in this dataset:', field_names)
+    print('Fields included in this dataset:', field_names)
     all_fields_list = []
     cutout_n = 0
 
@@ -155,7 +159,7 @@ if __name__ == '__main__':
                 field_range_dict = np.load(os.path.join(dataset_path, 'field_ranges.npy'),
                                            allow_pickle=True).item()
                 minra, maxra, mindec, maxdec = field_range_dict[field_name]
-                print("DEBUG boundaries for this field RA and DEC:", minra, maxra, mindec, maxdec)
+                #print("DEBUG boundaries for this field RA and DEC:", minra, maxra, mindec, maxdec)
                 con = sqlite3.connect(os.environ['OPTICAL_CATALOGUE'])
                 sql = f'''SELECT * FROM OPTICAL 
                 WHERE RA BETWEEN {minra} AND {maxra} AND
@@ -201,7 +205,7 @@ if __name__ == '__main__':
                                                            sname + save_appendix), dimensions_normal=True)
                     # print(f'\"{os.path.join(CUT_OUT_PATH,sname+save_appendix)}\",')
                 else:
-                    print('Warning: No DR2 data found. Skipping cutout.')
+                    print(f'Warning: No DR2 data found. Skipping cutout. {os.path.join(CUT_OUT_PATH, sname + save_appendix)}')
                     data_DR2 = None
                     with open(skipped_path_image_missing, 'a') as f:
                         print(lii.c_source.sname, file=f)
@@ -460,4 +464,4 @@ if __name__ == '__main__':
 
 print(f"{image_missing} sources skipped because LoTSS-DR2 stokes I is missing.")
 print(f"{faint} sources skipped because central source is too faint.")
-print(f"Script 3 creating tight boxes around signficiant signal. Time taken: {time.time() - start:.1f}\n\n")
+print(f"Script 3 creating tight boxes around signficiant signal. Done. Time taken: {time.time() - start:.1f}\n\n")

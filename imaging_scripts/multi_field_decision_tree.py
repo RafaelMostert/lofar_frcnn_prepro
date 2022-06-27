@@ -91,6 +91,8 @@ CACHE_PATH = os.environ['CACHE_PATH']
 MASX_store_dir = os.path.join(CACHE_PATH, '2MASX_queries')
 cache_dir = os.path.join(CACHE_PATH, 'cache')
 cutout_dir = os.path.join(CACHE_PATH, 'cutout_images')
+assert not os.environ['IMAGEDIR'] in ['train', 'val', 'test'], \
+         "root dataset directory name should not be \'train\', \'val\' or \'test\'."
 dataset_dir = os.path.join(os.environ['IMAGEDIR'], dataset_name)
 [os.makedirs(d, exist_ok=True) for d in [cache_dir, dataset_dir, cutout_dir, MASX_store_dir]]
 tally_total, tally_artefacts, tally_nearby, tally_large, tally_large_and_bright, tally_in_vac = 0, 0, 0, 0, 0, 0
@@ -201,16 +203,36 @@ if training_mode:
           f"({len(names_multiples) / len(compcat):.2%}) multi-comp components.")
 
 else:
-    raw_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
-    raw_field_names = list(set(raw_cat['Mosaic_ID']))
-    if exclude_DR1_area:
-        # Exclude DR1 area
+    
+    # if DR1_testset_inference only use specific testsetfields
+    try:
+        DR1_testset_inference = bool(int(os.environ['DR1_TESTSET_INFERENCE']))
+        print("Creating dataset only containing testset DR1 fields for inference.")
+
+        raw_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE'], 'df')
+        raw_field_names = list(set(raw_cat['Mosaic_ID']))
         compcat = pd.read_hdf(os.environ['LOTSS_COMP_CATALOGUE'], 'df')
-        dr1_field_names = list(set(compcat['Mosaic_ID']))
-        raw_field_names = [f for f in raw_field_names if not f in dr1_field_names]
+
+        # only include testfields of DR1 area
+        dr1_testfield_names = ['P21', 'P205+55', 'P8Hetdex', 'P206+52', 'P16Hetdex13', 'P27Hetdex09', 'P196+55', 'P218+55', 'P3Hetdex16', 'P22Hetdex04']
+        raw_field_names = [f for f in raw_field_names if f in dr1_testfield_names]
         field_folders = [f for n, f in zip(field_names, field_folders) if n in raw_field_names]
         local_field_folders = [f for n, f in zip(field_names, local_field_folders) if n in raw_field_names]
         field_names = [n for n in field_names if n in raw_field_names]
+
+    except:
+        DR1_testset_inference = False
+
+        raw_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
+        raw_field_names = list(set(raw_cat['Mosaic_ID']))
+        if exclude_DR1_area:
+            # Exclude DR1 area
+            compcat = pd.read_hdf(os.environ['LOTSS_COMP_CATALOGUE'], 'df')
+            dr1_field_names = list(set(compcat['Mosaic_ID']))
+            raw_field_names = [f for f in raw_field_names if not f in dr1_field_names]
+            field_folders = [f for n, f in zip(field_names, field_folders) if n in raw_field_names]
+            local_field_folders = [f for n, f in zip(field_names, local_field_folders) if n in raw_field_names]
+            field_names = [n for n in field_names if n in raw_field_names]
 
 field_names = field_names  # [:n_fields]
 field_folders = field_folders  # [:n_fields]
