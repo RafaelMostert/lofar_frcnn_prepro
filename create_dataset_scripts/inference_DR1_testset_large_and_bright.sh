@@ -26,7 +26,6 @@ export LOTSS_RAW_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v100.srl.h5
 export LOTSS_GAUSS_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v100.gaus.h5
 export LIKELY_UNRESOLVED_CATALOGUE=$CATALOGUE_PATH/GradientBoostingClassifier_A1_31504_18F_TT1234_B1_exp3_DR2.h5
 export OPTICAL_CATALOGUE=$CATALOGUE_PATH/combined_panstarrs_wise.h5
-export PATH=/soft/Montage_v3.3/bin:$PATH
 # Uncomment to exclude DR1 area
 #export EXCLUDE_DR1_AREA=1
 # Uncomment to include only DR1 testset for inference (TRAINING_MODE should be 0 for this to take
