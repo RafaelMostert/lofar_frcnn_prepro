@@ -9,9 +9,9 @@
 #Set paths (change if necessary):
 
 DATASET_NAME='LB300_Spring-60-65-corrected_precomputed_removed'
-SAMPLE_LEN=100
+SAMPLE_LEN=100000000000000000000000000000000000000
 SAMPLE_LIST='LB300_Spring-60-65-corrected_precomputed_removed'
-N_FIELDS=1 # Number of fields to include. Set to 1e9 to include all fields
+N_FIELDS=1e9 # Number of fields to include. Set to 1e9 to include all fields
 ROTATION=0 # 0 is False, 1 is True
 single_comp_rotation_angles_deg='25,50,100'
 multi_comp_rotation_angles_deg='25,50,100' #,105,125,145,165,185,205'

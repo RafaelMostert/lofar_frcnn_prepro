@@ -18,9 +18,9 @@ export OPTICAL_CATALOGUE=/data2/mostertrij/data/catalogues/combined_panstarrs_wi
 
 
 DATASET_NAME='uLB300_precomputed'
-SAMPLE_LEN=100 #000000000000000000000
+SAMPLE_LEN=100000000000000000000000
 SAMPLE_LIST='uLB300_precomputed'
-N_FIELDS=1 #00000000000 # Number of fields to include. Set to 1e9 to include all fields
+N_FIELDS=100000000000 # Number of fields to include. Set to 1e9 to include all fields
 ROTATION=1 # 0 is False, 1 is True
 single_comp_rotation_angles_deg='25,50,100'
 multi_comp_rotation_angles_deg='25,50,100' #,105,125,145,165,185,205'
