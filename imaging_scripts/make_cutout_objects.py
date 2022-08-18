@@ -52,9 +52,8 @@ if not (overwrite or not os.path.exists(list_name + '.pkl')):
     exit()
 
 # Define paths and filenames
-assert not os.environ['IMAGEDIR'] in ['train', 'val', 'test'] \
+assert not os.environ['IMAGEDIR'] in ['train', 'val', 'test'], \
     "root dataset directory name should not be \'train\', \'val\' or \'test\'."
-immutable_dr2_path = os.environ['MOSAICS_PATH_DR2']
 local_dr2_path = os.environ['LOCAL_MOSAICS_PATH_DR2']
 decision_tree_cat_path = os.environ['LIKELY_UNRESOLVED_CATALOGUE']
 rms_filename = 'mosaic-blanked.rms.fits'
@@ -91,6 +90,7 @@ except:
     exclude_DR1_area = False
 
 if remote:
+    immutable_dr2_path = os.environ['MOSAICS_PATH_DR2']
     field_names = [f.name for f in os.scandir(os.path.join(immutable_dr2_path, "RA0h_field")) if f.is_dir() and
                    f.name.startswith('P')] + [f.name for f in
                                               os.scandir(os.path.join(immutable_dr2_path, "RA13h_field")) if

@@ -151,7 +151,7 @@ if __name__ == '__main__':
             try:
                 remote = bool(int(os.environ['REMOTE_IMAGES']))
             except:
-                remote = True
+                remote = False
             if remote:
                 lofarname_DR2_0h = os.path.join(os.environ['MOSAICS_PATH_DR2'], "RA0h_field", s.lofarname_DR2)
                 lofarname_DR2_13h = os.path.join(os.environ['MOSAICS_PATH_DR2'], "RA13h_field", s.lofarname_DR2)
@@ -173,8 +173,8 @@ if __name__ == '__main__':
             #        lofarname_DR2 = lofarname_DR2_13h
             #        lofarrms_DR2 = lofarname_DR2_13h.replace('-blanked.fits','.rms.fits')
             else:
-                lofarname_DR2 = os.path.join(os.environ['MOSAICS_PATH_DR2'], s.lofarname_DR2)
-                lofarrms_DR2 = os.path.join(os.environ['MOSAICS_PATH_DR2'],
+                lofarname_DR2 = os.path.join(os.environ['LOCAL_MOSAICS_PATH_DR2'], s.lofarname_DR2)
+                lofarrms_DR2 = os.path.join(os.environ['LOCAL_MOSAICS_PATH_DR2'],
                                             s.lofarname_DR2.replace('-blanked.fits', '.fits').replace('.fits',
                                                                                                       '.rms.fits'))
             # wisename = s.wisename
