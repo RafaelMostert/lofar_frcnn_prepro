@@ -66,6 +66,13 @@ if __name__ == '__main__':
     dataset_path = os.path.join(DATA_PATH, dataset_name)
     DEBUG_PATH = os.path.join(DATA_PATH, dataset_name, 'label_debug_im_hull')
     os.makedirs(DEBUG_PATH, exist_ok=True)
+    # Check if we want to include optical_cat locations for visualization purposes
+    # (Slows the process down and is currently not used for inference or training)
+    try:
+        optical_cat = pd.read_hdf(os.environ['OPTICAL_CATALOGUE'], 'df')
+        add_optical_positions=True
+    except:
+        add_optical_positions=False
     # rotation enabled?
     rotation = bool(int(argv[14]))
     # Specify how and what rotated copies should be produced (counter-clockwise in degrees)
@@ -101,7 +108,6 @@ if __name__ == '__main__':
         except:
             comp_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
     if 'Source_Name' in comp_cat.keys():
-        optical_cat = pd.read_hdf(os.environ['OPTICAL_CATALOGUE'], 'df')
         DR2_flag = False
     else:
         print("Assuming DR2 optical catalogue that includes legacy instead of PAN-STARRS.")
@@ -155,7 +161,7 @@ if __name__ == '__main__':
             print(f'Iterating over the {len(l)} cutouts in pointing {field_name}.')
 
             # Create optical cat 
-            if training_mode and not 'Source_Name' in comp_cat.keys():
+            if add_optical_positions and training_mode and not 'Source_Name' in comp_cat.keys():
                 field_range_dict = np.load(os.path.join(dataset_path, 'field_ranges.npy'),
                                            allow_pickle=True).item()
                 minra, maxra, mindec, maxdec = field_range_dict[field_name]
@@ -251,7 +257,7 @@ if __name__ == '__main__':
 
                 # add component pixel locations to the cutout
                 # retrieve RA and DEC of sources that make up this value added source
-                if training_mode:
+                if add_optical_positions and training_mode:
                     cRA, cDEC = lii.c_source.ra, lii.c_source.dec
                     # print("cRA, cDEC:", cRA, cDEC)
                     # Get optical catalog entries for cutout
