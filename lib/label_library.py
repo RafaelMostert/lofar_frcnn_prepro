@@ -752,7 +752,6 @@ def create_dict_from_images_and_annotations_coco_version(image_names, fits_filep
             assert f.endswith('.png'), 'Directory should only contain images.'
         for f in os.listdir(prepro_plot_dir):
             os.remove(os.path.join(prepro_plot_dir,f))
-    """
 
     try:
         vac = pd.read_hdf('/home/rafael/data/mostertrij/data/catalogues/LOFAR_HBA_T1_DR1_merge_ID_optical_f_v1.2.h5')
@@ -762,6 +761,7 @@ def create_dict_from_images_and_annotations_coco_version(image_names, fits_filep
     except:
         print("Could not load value added cat")
         pass
+    """
     if not debug_path is None:
         os.makedirs(os.path.join(debug_path, 'boxes'), exist_ok=True)
 

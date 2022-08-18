@@ -32,8 +32,6 @@ dr1_dr2_comparison_only = False
 assert len(argv) == 15, f'Script expects 14 input arguments, not {len(argv) - 1}'
 IMAGEDIR = os.environ['IMAGEDIR']
 CACHE_DIR = os.environ['CACHE_PATH']
-COMP_CAT_PATH = os.environ['LOTSS_COMP_CATALOGUE']
-comp_cat = pd.read_hdf(COMP_CAT_PATH)
 fits_directory = os.path.join(IMAGEDIR, 'cutouts')
 contour_levels = [3, 5]  # draw 3 and 5 sigma contourfills in gb of rgb images
 # train_val_test_split = [0.6,0.8,1]
@@ -184,6 +182,8 @@ if dr1_dr2_comparison_only:
 
 if training_mode:
     save_optical = True
+    COMP_CAT_PATH = os.environ['LOTSS_COMP_CATALOGUE']
+    comp_cat = pd.read_hdf(COMP_CAT_PATH)
     if not 'Source_Name' in comp_cat.keys():
         splitted_index_list = [list(range(len(image_names)))]
     else:
