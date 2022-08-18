@@ -801,9 +801,9 @@ def create_dict_from_images_and_annotations_coco_version(image_names, fits_filep
 
         if training_mode and save_optical:
             record["optical_sources"] = deepcopy(cutout.optical_sources)
-        record["related_names"] = deepcopy([c.sname for c in cutout.other_components if 
+        record["related_compnames"] = deepcopy([c.sname for c in cutout.other_components if 
             c.related])
-        record["unrelated_names"] = deepcopy([c.sname for c in cutout.other_components if not
+        record["unrelated_compnames"] = deepcopy([c.sname for c in cutout.other_components if not
             c.related])
 
         """
