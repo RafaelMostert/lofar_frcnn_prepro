@@ -1,4 +1,7 @@
-import collections
+try:
+    from collections import Iterable
+except ImportError:
+    from collections.abc import Iterable
 import os
 import pickle
 
@@ -16,7 +19,7 @@ from photutils import detect_sources
 def flatten(l):
     '''Flatten a list or numpy array'''
     for el in l:
-        if isinstance(el, collections.Iterable) and not isinstance(el,
+        if isinstance(el, Iterable) and not isinstance(el,
                                                                    (str, bytes)):
             yield from flatten(el)
         else:

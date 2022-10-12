@@ -6,7 +6,11 @@ import copy
 import itertools
 import os
 import pickle
-from collections import Counter, Iterable
+from collections import Counter
+try:
+    from collections import Iterable
+except ImportError:
+    from collections.abc import Iterable
 from copy import deepcopy
 from itertools import chain
 from shutil import copyfileobj

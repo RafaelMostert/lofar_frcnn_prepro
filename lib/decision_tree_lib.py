@@ -2,7 +2,10 @@ import numpy as np
 import pandas as pd
 import os
 import sys
-import collections
+try:
+  from collections import Iterable
+except ImportError:
+  from collections.abc import Iterable
 from astropy.coordinates import SkyCoord
 from astropy.io import fits
 from astropy.nddata.utils import Cutout2D
@@ -95,7 +98,7 @@ def check_for_artefacts(cat, overwrite=False, store_dir=''):
 def flatten(l):
     '''Flatten a list or numpy array'''
     for el in l:
-        if isinstance(el, collections.Iterable) and not isinstance(el,
+        if isinstance(el, Iterable) and not isinstance(el,
                                                                    (str, bytes)):
             yield from flatten(el)
         else:
