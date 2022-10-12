@@ -7,9 +7,6 @@ Fast R-CNN.
 
 
 <!-- GETTING STARTED -->
-test5
-
-vanuit rijn1 produ
 ## Getting Started
 
 ### Prerequisites
