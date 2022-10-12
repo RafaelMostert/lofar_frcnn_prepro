@@ -18,7 +18,7 @@ export DEBUG_PATH=$BASE_PROJECT_PATH/frcnn_images/$DATASET_NAME/debug # Where th
 export CACHE_PATH=$BASE_PROJECT_PATH/Data/cache # Cache
 #export MOSAICS_PATH_DR2=/disks/paradata/shimwell/LoTSS-DR2/mosaics
 #export LOCAL_MOSAICS_PATH_DR2=/data2/mostertrij/data/LoTSS_DR2
-export LOCAL_MOSAICS_PATH_DR2=/data2/mostertrij/data/Pipeline/Data/Images
+export LOCAL_MOSAICS_PATH_DR2=$BASE_PROJECT_PATH/Data/Images
 #export MOSAICS_PATH_DR1=/data2/mostertrij/pink-basics/data_LoTSS_DR1
 #export LOTSS_RAW_CATALOGUE=$CATALOGUE_PATH/LOFAR_HBA_T1_DR1_catalog_v1.0.srl.h5
 #export LOTSS_GAUSS_CATALOGUE=$CATALOGUE_PATH/LOFAR_HBA_T1_DR1_catalog_v0.99.gaus.h5
@@ -29,7 +29,7 @@ export LOTSS_RAW_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v110_masked.srl.P21.h5
 #export LOTSS_GAUSS_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v100.gaus.h5
 export LOTSS_GAUSS_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v110.gaus.P21.h5
 #export LIKELY_UNRESOLVED_CATALOGUE=$CATALOGUE_PATH/GradientBoostingClassifier_A1_31504_18F_TT1234_B1_exp3_DR2.h5
-export LIKELY_UNRESOLVED_CATALOGUE=/data2/mostertrij/data/Pipeline/Results/GBC/P21_pred_thresholds.h5
+export LIKELY_UNRESOLVED_CATALOGUE=$BASE_PROJECT_PATH/Results/GBC/P21_pred_thresholds.h5
 #export OPTICAL_CATALOGUE=$CATALOGUE_PATH/combined_panstarrs_wise.h5
 # Uncomment to exclude DR1 area
 #export EXCLUDE_DR1_AREA=1
@@ -95,6 +95,6 @@ python $PROJECTPATH/labeling_scripts/create_and_populate_initial_dataset_rotatio
    $TRAINING_MODE $REMOVE_UNRESOLVED $UNRESOLVED_THRESHOLD $SIGMA_BOX_FIT &> logs/out4_$DATASET_NAME.txt
 #"""
 
-sleep 10
-rsync -a /data2/mostertrij/data/frcnn_images/$DATASET_NAME lgm4:/data1/mostertrij/data/frcnn_images
-rsync -a /data2/mostertrij/data/cache/segmentation_maps* lgm4:/data1/mostertrij/data/cache
+#sleep 10
+#rsync -a /data2/mostertrij/data/frcnn_images/$DATASET_NAME lgm4:/data1/mostertrij/data/frcnn_images
+#rsync -a /data2/mostertrij/data/cache/segmentation_maps* lgm4:/data1/mostertrij/data/cache
