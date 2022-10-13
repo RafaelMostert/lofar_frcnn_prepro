@@ -102,15 +102,18 @@ if remote:
                                                 os.scandir(os.path.join(immutable_dr2_path, "RA13h_field")) if
                                                 f.is_dir() and f.name.startswith('P')]
 else:
+    print("Looking for pointing folders in:",local_dr2_path)
     field_names = [f.name for f in os.scandir(local_dr2_path) 
             if f.is_dir() and f.name.startswith('P')]
     field_folders = [f.path for f in os.scandir(local_dr2_path) 
             if f.is_dir() and f.name.startswith('P')]
+    print("Found the following fields:",field_names)
 local_field_folders = [os.path.join(local_dr2_path, f) for f in field_names]
 
 # If in training_mode, we want labels for our cutouts, thus
 # discard field directories that are not present in the value added catalogue
 raw_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
+print("Reading source-cat from:",os.environ['LOTSS_RAW_CATALOGUE_DR2'])
 decision_cat = pd.read_hdf(decision_tree_cat_path)
 decision_dict = {sn:gbc_output for sn, gbc_output in zip(
     decision_cat.Source_Name.values,decision_cat[UNRESOLVED_THRESHOLD].values)}
