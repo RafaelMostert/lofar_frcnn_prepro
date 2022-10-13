@@ -62,8 +62,8 @@ REMOTE=0
 ####################################
 mkdir -p logs
 
-python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $BASE_PROJECT_PATH/Results/GBC &> logs/out00_$DATASET_NAME.txt
-python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $CATALOGUE_PATH &> logs/out01_$DATASET_NAME.txt
+python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $BASE_PROJECT_PATH/Results/GBC &> logs/out0_$DATASET_NAME.txt
+python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $CATALOGUE_PATH &>> logs/out0_$DATASET_NAME.txt
 
 #1 - Make a source list: 
 # Given a source list, create source objects 

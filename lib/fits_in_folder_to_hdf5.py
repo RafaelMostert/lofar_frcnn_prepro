@@ -14,17 +14,16 @@ import os
 paths = sys.argv[1:]
 for path in paths:
     files = os.listdir(path)
-    print("files:",files)
     cat_paths = [os.path.join(path,f) for f in files if f.endswith('.csv') or f.endswith('.fits')]
-    print("paths:", cat_paths)
+    print("Attempting to convert the following files to HDF5:", cat_paths)
 
 for cat_path in cat_paths:
     start = time.time()
     if cat_path.endswith('.fits'):
 
         cat_path_hdf = cat_path.replace('.fits', '.h5')
-        print("new cat path:", cat_path_hdf)
         if os.path.exists(cat_path_hdf):
+            print("Skipping as HDF5 version already exists:", cat_path_hdf)
             continue
         # Load Fits cat
         cat = Table.read(cat_path).to_pandas()
@@ -37,8 +36,8 @@ for cat_path in cat_paths:
         #print(time.time() - start)
     elif cat_path.endswith('.csv'):
         cat_path_hdf = cat_path.replace('.csv', '.h5')
-        print("new cat path:", cat_path_hdf)
         if os.path.exists(cat_path_hdf):
+            print("Skipping as HDF5 version already exists:", cat_path_hdf)
             continue
         # Load Fits cat
         cat = pd.read_csv(cat_path)
