@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------------------
 
 # Change these variables to suit your needs
-DATASET_NAME='inference_1field_DR2_combined_test' 
+DATASET_NAME='inference_P21_DR2_rijn1' 
 SAMPLE_LEN=9999999999999999999999999999999999999 # Limit number of sources to this number. Set very high to have no limit
 N_FIELDS=1 # Number of fields to include. Set to 1e9 to include all fields
 INCLUDE_LOW_SIG=1 # Determines whether low sigma sources are also labeled
@@ -60,7 +60,10 @@ DEBUG=1 # 0 is False, 1 is True
 OVERWRITE=1 # 0 is False, 1 is True
 REMOTE=0
 ####################################
+mkdir -p logs
 
+python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $BASE_PROJECT_PATH/Results/GBC
+python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $CATALOGUE_PATH
 
 #1 - Make a source list: 
 # Given a source list, create source objects 

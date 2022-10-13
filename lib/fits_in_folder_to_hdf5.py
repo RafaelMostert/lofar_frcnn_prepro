@@ -1,44 +1,50 @@
+"""
+Running this script and passing paths in its wake will convert all
+the csv
+"""
 import time
-
 import numpy as np
 import pandas as pd
 from astropy.table import Table
+import sys
+import os
 
-# Define cat path
-cat_path = '/data/mostertrij/data/catalogues/LOFAR_HBA_T1_DR1_merge_ID_v1.2.comp.fits'
-cat_path = '/data/mostertrij/data/catalogues/LOFAR_HBA_T1_DR1_merge_ID_optical_f_v1.2.fits'
-cat_path = '/data/mostertrij/data/catalogues/LOFAR_HBA_T1_DR1_catalog_v0.9.srl.fixed.fits'
-cat_path = '/home/rafael/data/mostertrij/data/catalogues/LoTSS_DR2_v100.srl.fits'
-cat_path = '/home/rafael/data/mostertrij/data/catalogues/GradientBoostingClassifier_lotss_31504_16features_train_test_balanced_new_feaures_DC_pred_correct_fast_final.fits'
-cat_path = '/home/rafael/data/mostertrij/data/catalogues/LOFAR_HBA_T1_DR1_catalog_v1.0.srl.fits'
-cat_path = '/home/rafael/data/mostertrij/data/catalogues/LOFAR_HBA_T1_DR1_catalog_v0.99.gaus.fits'
-cat_path = '/data2/mostertrij/data/catalogues/LoTSS_DR2_v100.gaus.fits'
 
-cat_paths=['/data2/mostertrij/data/Pipeline/Results/GBC/P21_pred_thresholds.csv',
-        '/data2/mostertrij/data/Pipeline/Data/Catalogues/Pybdsf/LoTSS_DR2_v110_masked.srl.P21.fits',
-        '/data2/mostertrij/data/Pipeline/Data/Catalogues/Pybdsf/LoTSS_DR2_v110.gaus.P21.fits']
+# unwrap given paths
+paths = sys.argv[1:]
+for path in paths:
+    files = os.listdir(path)
+    print("files:",files)
+    cat_paths = [os.path.join(path,f) for f in files if f.endswith('.csv') or f.endswith('.fits')]
+    print("paths:", cat_paths)
 
 for cat_path in cat_paths:
     start = time.time()
     if cat_path.endswith('.fits'):
 
         cat_path_hdf = cat_path.replace('.fits', '.h5')
+        print("new cat path:", cat_path_hdf)
+        if os.path.exists(cat_path_hdf):
+            continue
         # Load Fits cat
         cat = Table.read(cat_path).to_pandas()
         str_df = cat.select_dtypes([np.object])
         str_df = str_df.stack().str.decode('utf-8').unstack()
         for col in str_df:
             cat[col] = str_df[col]
-        print(cat.info())
-        print(cat.head())
-        print(time.time() - start)
+        #print(cat.info())
+        #print(cat.head())
+        #print(time.time() - start)
     elif cat_path.endswith('.csv'):
         cat_path_hdf = cat_path.replace('.csv', '.h5')
+        print("new cat path:", cat_path_hdf)
+        if os.path.exists(cat_path_hdf):
+            continue
         # Load Fits cat
         cat = pd.read_csv(cat_path)
-        print(cat.info())
-        print(cat.head())
-        print(time.time() - start)
+        #print(cat.info())
+        #print(cat.head())
+        #print(time.time() - start)
 
     # Write to hdf5
     cat.to_hdf(cat_path_hdf, 'df')
@@ -46,6 +52,6 @@ for cat_path in cat_paths:
     # Test result
     start = time.time()
     cat2 = pd.read_hdf(cat_path_hdf, 'df')
-    print(cat2.info())
-    print(cat2.head())
-    print(time.time() - start)
+    #print(cat2.info())
+    #print(cat2.head())
+    #print(time.time() - start)
