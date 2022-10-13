@@ -117,9 +117,9 @@ def fits_to_image(cutout, fits_filepath, image_filepath,
 
         full_pixel_size = np.shape(field)[0]
         crop_amount = (full_pixel_size - cutout.size_pixels) / 2
-        field = crop(field, crop_amount)
-        field_untouched = crop(field_untouched, crop_amount)
-        rms = crop(rms, crop_amount)
+        field = crop(field, int(crop_amount))
+        field_untouched = crop(field_untouched, int(crop_amount))
+        rms = crop(rms, int(crop_amount))
 
         if not imsize is None:
             # Resize array to required size
