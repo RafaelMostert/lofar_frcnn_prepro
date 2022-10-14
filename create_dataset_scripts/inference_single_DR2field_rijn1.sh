@@ -10,15 +10,15 @@ N_FIELDS=1 # Number of fields to include. Set to 1e9 to include all fields
 INCLUDE_LOW_SIG=1 # Determines whether low sigma sources are also labeled
 REMOVE_UNRESOLVED=1 #  0 is False; 1 is True
 #Change paths to match your setup
-BASE_PROJECT_PATH=/data1/intema/lofarpipeline
-CATALOGUE_PATH=$BASE_PROJECT_PATH/Data/Catalogues/Pybdsf
-export PROJECTPATH=$BASE_PROJECT_PATH/lofar_frcnn_prepro # location of project
-export IMAGEDIR=$BASE_PROJECT_PATH/Data/frcnn_images # Where the folders with datasets will end up
+BASE_PROJECT_PATH=/data1/tap
+CATALOGUE_PATH=$BASE_PROJECT_PATH/data/catalogues/pybdsf
+export PROJECTPATH=$BASE_PROJECT_PATH/comp/lofar_frcnn_prepro # location of project
+export IMAGEDIR=$BASE_PROJECT_PATH/data/frcnn_images # Where the folders with datasets will end up
 export DEBUG_PATH=$BASE_PROJECT_PATH/frcnn_images/$DATASET_NAME/debug # Where the folders with datasets will end up
-export CACHE_PATH=$BASE_PROJECT_PATH/Data/cache # Cache
+export CACHE_PATH=$BASE_PROJECT_PATH/data/cache # Cache
 #export MOSAICS_PATH_DR2=/disks/paradata/shimwell/LoTSS-DR2/mosaics
 #export LOCAL_MOSAICS_PATH_DR2=/data2/mostertrij/data/LoTSS_DR2
-export LOCAL_MOSAICS_PATH_DR2=$BASE_PROJECT_PATH/Data/Images
+export LOCAL_MOSAICS_PATH_DR2=$BASE_PROJECT_PATH/data/images
 #export MOSAICS_PATH_DR1=/data2/mostertrij/pink-basics/data_LoTSS_DR1
 #export LOTSS_RAW_CATALOGUE=$CATALOGUE_PATH/LOFAR_HBA_T1_DR1_catalog_v1.0.srl.h5
 #export LOTSS_GAUSS_CATALOGUE=$CATALOGUE_PATH/LOFAR_HBA_T1_DR1_catalog_v0.99.gaus.h5
@@ -29,7 +29,7 @@ export LOTSS_RAW_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v110_masked.srl.P21.h5
 #export LOTSS_GAUSS_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v100.gaus.h5
 export LOTSS_GAUSS_CATALOGUE_DR2=$CATALOGUE_PATH/LoTSS_DR2_v110.gaus.P21.h5
 #export LIKELY_UNRESOLVED_CATALOGUE=$CATALOGUE_PATH/GradientBoostingClassifier_A1_31504_18F_TT1234_B1_exp3_DR2.h5
-export LIKELY_UNRESOLVED_CATALOGUE=$BASE_PROJECT_PATH/Results/GBC/P21_pred_thresholds.h5
+export LIKELY_UNRESOLVED_CATALOGUE=$BASE_PROJECT_PATH/results/gbc/P21_pred_thresholds.h5
 #export OPTICAL_CATALOGUE=$CATALOGUE_PATH/combined_panstarrs_wise.h5
 # Uncomment to exclude DR1 area
 #export EXCLUDE_DR1_AREA=1
@@ -62,8 +62,8 @@ REMOTE=0
 ####################################
 mkdir -p logs
 
-python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $BASE_PROJECT_PATH/Results/GBC &> logs/out0_$DATASET_NAME.txt
-python $BASE_PROJECT_PATH/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $CATALOGUE_PATH &>> logs/out0_$DATASET_NAME.txt
+python $BASE_PROJECT_PATH/comp/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $BASE_PROJECT_PATH/results/gbc &> logs/out0_$DATASET_NAME.txt
+python $BASE_PROJECT_PATH/comp/lofar_frcnn_prepro/lib/fits_in_folder_to_hdf5.py $CATALOGUE_PATH &>> logs/out0_$DATASET_NAME.txt
 
 #1 - Make a source list: 
 # Given a source list, create source objects 
