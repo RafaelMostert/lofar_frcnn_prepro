@@ -258,6 +258,9 @@ if __name__ == '__main__':
 
             cutout_path = os.path.join(CUTOUT_DIR, sourcename + save_appendix)
             if not os.path.exists(cutout_path) or overwrite:  # or overwrite:
+                lhdu = extract_subim(lofarname_DR2, ra, dec, size_degree, verbose=False)
+                lhdu.writeto(cutout_path, overwrite=overwrite)
+                newly_created = True
                 try:
                     lhdu = extract_subim(lofarname_DR2, ra, dec, size_degree, verbose=False)
                     lhdu.writeto(cutout_path, overwrite=overwrite)
