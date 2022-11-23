@@ -56,6 +56,7 @@ if not (overwrite or not os.path.exists(list_name + '.pkl')):
 # Define paths and filenames
 assert not os.environ['IMAGEDIR'] in ['train', 'val', 'test'], \
     "root dataset directory name should not be \'train\', \'val\' or \'test\'."
+field = os.getenv('FIELD')
 local_dr2_path = os.environ['LOCAL_MOSAICS_PATH_DR2']
 decision_tree_cat_path = os.environ['LIKELY_UNRESOLVED_CATALOGUE']
 rms_filename = 'mosaic-blanked.rms.fits'
@@ -103,10 +104,11 @@ if remote:
                                                 f.is_dir() and f.name.startswith('P')]
 else:
     print("Looking for pointing folders in:",local_dr2_path)
+    print("Field name has to be equal to:", field)
     field_names = [f.name for f in os.scandir(local_dr2_path) 
-            if f.is_dir() and f.name.startswith('P')]
+            if f.is_dir() and f.name.startswith('P') and f.name == field]
     field_folders = [f.path for f in os.scandir(local_dr2_path) 
-            if f.is_dir() and f.name.startswith('P')]
+            if f.is_dir() and f.name.startswith('P') and f.name == field]
     print("Found the following fields:",field_names)
 local_field_folders = [os.path.join(local_dr2_path, f) for f in field_names]
 
