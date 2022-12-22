@@ -202,7 +202,7 @@ for field_idx, (field_name, field_folder, local_field_folder, field_path, field_
 
     # Assign paths to cutout_list
     for c in cutout_list:
-        c.set_lofarname_DR2(field_path)
+        c.set_lofarname_DR2(os.path.join(field_path))
 
     # Saving cut-out list to pickle
     with open(os.path.join(local_field_folder, list_name + '.pkl'), 'wb') as output:

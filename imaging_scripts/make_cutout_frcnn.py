@@ -62,35 +62,36 @@ if __name__ == '__main__':
 
     # Annotated PyBDSF table, used for finding other sources
     if training_mode:
+        Thisbelowisstillinfullcatmode
         compcat = pd.read_hdf(os.environ['LOTSS_COMP_CATALOGUE'], 'df')
         lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE'], 'df')
         # comp_name_to_source_name_dict = {n:i for i,n in zip(compcat.Source_Name.values,
         #                                                    compcat.Component_Name.values)}
     else:
-        try: 
-            DR1_testset_inference = os.environ['DR1_TESTSET_INFERENCE']
-            lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE'], 'df')
-        except:
-            lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
-        compcat = lt
+        #try: 
+        #    DR1_testset_inference = os.environ['DR1_TESTSET_INFERENCE']
+        #    lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE'], 'df')
+        #except:
+        #    lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
+        #compcat = lt
+        compcat = pd.read_hdf(os.path.join(os.getenv('FIELD_DATA'),os.getenv('SRL_NAME').replace('.fits','.h5')))
 
     # Load catalogue containing likely unresolved sources to remove them later
     if os.path.exists(UNRESOLVED_PATH):
         if UNRESOLVED_PATH.endswith('.h5'):
             unresolved_cat = pd.read_hdf(UNRESOLVED_PATH)
-        elif UNRESOLVED_PATH.endswith('.csv'):
-            unresolved_cat = pd.read_csv(UNRESOLVED_PATH)[['Source_Name', unresolved_threshold]]
         else:
-            raise Exception("Unexpected file type, expected csv of hdf5:", UNRESOLVED_PATH)
+            raise Exception("Unexpected file type, expected hdf5:", UNRESOLVED_PATH)
         unresolved_dict = {s: p for s, p in
-                           zip(unresolved_cat['Source_Name'].values, unresolved_cat[unresolved_threshold].apply(
+                           zip(unresolved_cat.index.values, unresolved_cat[unresolved_threshold].apply(
                                lambda x: bool(x)).values)}
         # Load gaussian component cat
         if training_mode:
             gauss_cat = pd.read_hdf(os.environ['LOTSS_GAUSS_CATALOGUE'])
         else:
             print("Loading DR2 gaussian catalogue")
-            gauss_cat = pd.read_hdf(os.environ['LOTSS_GAUSS_CATALOGUE_DR2'])
+            #gauss_cat = pd.read_hdf(os.environ['LOTSS_GAUSS_CATALOGUE_DR2'])
+            gauss_cat = pd.read_hdf(os.path.join(os.getenv('FIELD_DATA'),os.getenv('GAUS_NAME').replace('.fits','.h5')))
 
         # Turn Gauss cat into dict
         gauss_dict = {s: [] for s in gauss_cat['Source_Name'].values}
