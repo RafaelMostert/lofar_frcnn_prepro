@@ -58,10 +58,10 @@ assert not os.environ['IMAGEDIR'] in ['train', 'val', 'test'], \
     "root dataset directory name should not be \'train\', \'val\' or \'test\'."
 field = os.getenv('FIELD')
 local_dr2_path = os.environ['LOCAL_MOSAICS_PATH_DR2']
-decision_tree_cat_path = os.environ['LIKELY_UNRESOLVED_CATALOGUE']
-rms_filename = 'mosaic-blanked.rms.fits'
-cat_filename = 'mosaic-blanked.cat.fits'
-field_filename = 'mosaic-blanked.fits'
+gbc_predictions_path = os.environ['LIKELY_UNRESOLVED_CATALOGUE']
+cat_filename = os.getenv('SRL_NAME').replace('.fits', '.h5') #'mosaic-blanked.cat.fits'
+field_filename = os.getenv('IMNAME') #'mosaic-blanked.fits'
+rms_filename = os.getenv('RMSNAME') #'mosaic-blanked.rms.fits'
 CACHE_PATH = os.environ['CACHE_PATH']
 MASX_store_dir = os.path.join(CACHE_PATH, '2MASX_queries')
 cache_dir = os.path.join(CACHE_PATH, 'cache')
@@ -109,20 +109,21 @@ else:
             if f.is_dir() and f.name.startswith('P') and f.name == field]
     field_folders = [f.path for f in os.scandir(local_dr2_path) 
             if f.is_dir() and f.name.startswith('P') and f.name == field]
-    print("Found the following fields:",field_names)
+    print("Found the following field:",field_names)
 local_field_folders = [os.path.join(local_dr2_path, f) for f in field_names]
 
 # If in training_mode, we want labels for our cutouts, thus
 # discard field directories that are not present in the value added catalogue
-raw_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
-print("Reading source-cat from:",os.environ['LOTSS_RAW_CATALOGUE_DR2'])
-decision_cat = pd.read_hdf(decision_tree_cat_path)
-decision_dict = {sn:gbc_output for sn, gbc_output in zip(
-    decision_cat.Source_Name.values,decision_cat[UNRESOLVED_THRESHOLD].values)}
-decision_cat = decision_cat.set_index('Source_Name')
-raw_field_names = list(set(raw_cat['Mosaic_ID']))
+gbc_cat = pd.read_hdf(gbc_predictions_path)
+#gbc_dict = {sn:gbc_output for sn, gbc_output in zip(
+#    gbc_cat.Source_Name.values,gbc_cat[UNRESOLVED_THRESHOLD].values)}
+#gbc_cat = gbc_cat.set_index('Source_Name')
+
 if exclude_DR1_area:
     # Exclude DR1 area
+    print("Reading source-cat from:",os.environ['LOTSS_RAW_CATALOGUE_DR2'])
+    raw_cat = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
+    raw_field_names = list(set(raw_cat['Mosaic_ID']))
     compcat = pd.read_hdf(os.environ['LOTSS_COMP_CATALOGUE'], 'df')
     dr1_field_names = list(set(compcat['Mosaic_ID']))
     raw_field_names = [f for f in raw_field_names if not f in dr1_field_names]
@@ -130,11 +131,7 @@ if exclude_DR1_area:
     local_field_folders = [f for n, f in zip(field_names, local_field_folders) if n in raw_field_names]
     field_names = [n for n in field_names if n in raw_field_names]
 
-field_names = field_names  # [:n_fields]
-field_folders = field_folders  # [:n_fields]
-local_field_folders = local_field_folders  # [:n_fields]
 [os.makedirs(f, exist_ok=True) for f in local_field_folders]
-print('Iterating over the following fields:', field_names)
 
 tally_total,tally_in_vac=0,0
 field_paths = [os.path.join(p, field_filename) for p in field_folders]
@@ -147,7 +144,7 @@ for field_idx, (field_name, field_folder, local_field_folder, field_path, field_
                                                                                                            field_paths,
                                                                                                            field_cat_paths)):
     # Load image and raw PyBDSF source catalogue (NOT gaussians, NOT component, NOT value-added)
-    source_cat = raw_cat[raw_cat.Mosaic_ID == field_name]
+    source_cat = pd.read_hdf(field_cat_path) #raw_cat[raw_cat.Mosaic_ID == field_name]
     if n_cutouts < len(source_cat):
         source_cat = source_cat.iloc[:n_cutouts]
 
@@ -156,8 +153,9 @@ for field_idx, (field_name, field_folder, local_field_folder, field_path, field_
           f'{field_folder} and local one {local_field_folder}')
 
     # Filter out sources that do require visual inspection according to GBC
+    print("GBC cat loaded from:",gbc_predictions_path)
     keep_indices = [sn_i for sn_i, sn in enumerate(source_cat.Source_Name.values)
-            if decision_dict[sn]==0]
+            if gbc_cat.loc[sn][UNRESOLVED_THRESHOLD]==0]
     source_cat = source_cat.iloc[keep_indices]
     print(f'After discarding the sources that do not require visual inspection according to the'
             f' GBC we are left with {len(source_cat)} sources.')
@@ -174,7 +172,7 @@ for field_idx, (field_name, field_folder, local_field_folder, field_path, field_
     tally_total += len(source_cat)
 
     if len(source_cat) == 0:
-        print(f"Field {field_name} skipped as none of its sources appear in the merged catalogue.")
+        print(f"Field {field_name} skipped as none of its sources are marked by the gbc.")
         continue
     ras, decs = source_cat.RA, source_cat.DEC
     offset = 220 / 3600  # approx. half the diagonal axis of a 300 arcsec cutout
@@ -218,9 +216,10 @@ for field_idx, (field_name, field_folder, local_field_folder, field_path, field_
     if len(field_indices) >= n_fields:
         break
 
-# save stats
-np.savez(os.path.join(dataset_dir, 'selected_sources_stats.npz'), names=names, total_fluxes=total_fluxes,
-         peak_fluxes=peak_fluxes, source_sizes=source_sizes)
+    # save stats
+    np.savez(os.path.join(local_field_folder, 'selected_sources_stats.npz'), names=names, total_fluxes=total_fluxes,
+             peak_fluxes=peak_fluxes, source_sizes=source_sizes)
+
 # Save field ranges
 field_names = np.array(field_names)[field_indices]
 local_field_folders = np.array(local_field_folders)[field_indices]
