@@ -14,6 +14,8 @@ overwrite = bool(int(os.getenv('PIPE_OVERWRITE')))
 # unwrap given paths
 cat_paths = [os.path.join(field_dir,f) for f in [os.getenv('SRL_NAME'), os.getenv('GAUS_NAME'),
     os.getenv('SRL_LR_NAME'),os.getenv('GAUS_LR_NAME')]]
+if all([os.path.exists(c.replace('.fits','.h5')) for c in cat_paths]) and not overwrite:
+    print("DONE: Converted catalogues from fits to HDF5.")
 print("Attempting to convert the following files to HDF5:", cat_paths)
 
 for cat_path in cat_paths:

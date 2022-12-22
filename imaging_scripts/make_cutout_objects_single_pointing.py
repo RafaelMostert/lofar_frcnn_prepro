@@ -28,7 +28,6 @@ argv[7] (bool(int))  - Get data from remote immutable data folders (1=True, 0=Fa
 """
 start = time.time()
 assert len(argv) == 9, 'Script expects 9 input arguments.'
-print("Start prepro script 1/4.")
 # MODE Training mode or Predict mode 
 training_mode = bool(int(argv[1]))
 
@@ -50,8 +49,9 @@ remote = bool(int(argv[7]))
 UNRESOLVED_THRESHOLD = argv[8]
 
 if not (overwrite or not os.path.exists(list_name + '.pkl')):
-    print('Source list already exists. Skipping since overwrite flag = False.')
+    print('DONE: Source component association stage 1/4.')
     exit()
+print("Start prepro script 1/4.")
 
 # Define paths and filenames
 assert not os.environ['IMAGEDIR'] in ['train', 'val', 'test'], \
