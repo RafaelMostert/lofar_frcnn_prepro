@@ -25,6 +25,9 @@ for cat_path in cat_paths:
         if os.path.exists(cat_path_hdf):
             print("Skipping as HDF5 version already exists:", cat_path_hdf)
             continue
+        if os.path.getsize(cat_path)/1024**3 > 10:
+            print("Skipping as fits file is too big:", os.path.getsize(cat_path)/1024**3,'GB')
+            continue
         # Load Fits cat
         cat = Table.read(cat_path).to_pandas()
         str_df = cat.select_dtypes([np.object])
