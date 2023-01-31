@@ -16,7 +16,7 @@ from lib.label_utils import get_idx_dict
 from lib.decision_tree_lib import return_nn_within_radius
 
 # Create cutout directory in imagedirectory
-imagedir = os.environ['IMAGEDIR']
+imagedir = os.environ['TEMP_RESULTS']
 UNRESOLVED_PATH = os.environ['LIKELY_UNRESOLVED_CATALOGUE']
 CUTOUT_DIR = os.path.join(imagedir, 'cutouts')
 os.makedirs(CUTOUT_DIR, exist_ok=True)
@@ -121,7 +121,7 @@ if __name__ == '__main__':
             break
 
         print(f'Opening {pickle_name} in field {field_name}')
-        with open(os.path.join(local_field_folder, pickle_name), 'rb') as input:
+        with open(os.path.join(imagedir, pickle_name), 'rb') as input:
             l = pickle.load(input)
 
         local_count = 0
@@ -382,7 +382,7 @@ if __name__ == '__main__':
             """
 
         print(f'Processed {len(l)} sources in this field.')
-        with open(os.path.join(local_field_folder, pickle_name), 'wb') as output:
+        with open(os.path.join(imagedir, pickle_name), 'wb') as output:
             pickle.dump(l, output, pickle.HIGHEST_PROTOCOL)
 
     # end of cut-out for loop

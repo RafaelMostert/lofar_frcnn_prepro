@@ -30,7 +30,7 @@ start = time.time()
 # and classes for each fits file
 dr1_dr2_comparison_only = False
 assert len(argv) == 15, f'Script expects 14 input arguments, not {len(argv) - 1}'
-IMAGEDIR = os.environ['IMAGEDIR']
+IMAGEDIR = os.environ['TEMP_RESULTS']
 CACHE_DIR = os.environ['CACHE_PATH']
 fits_directory = os.path.join(IMAGEDIR, 'cutouts')
 contour_levels = [3, 5]  # draw 3 and 5 sigma contourfills in gb of rgb images

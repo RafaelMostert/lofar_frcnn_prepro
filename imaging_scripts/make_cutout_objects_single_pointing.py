@@ -54,7 +54,8 @@ if not (overwrite or not os.path.exists(list_name + '.pkl')):
 print("Start prepro script 1/4.")
 
 # Define paths and filenames
-assert not os.environ['IMAGEDIR'] in ['train', 'val', 'test'], \
+temp_results = os.getenv('TEMP_RESULTS')
+assert not temp_results in ['train', 'val', 'test'], \
     "root dataset directory name should not be \'train\', \'val\' or \'test\'."
 field = os.getenv('FIELD')
 local_dr2_path = os.environ['LOCAL_MOSAICS_PATH_DR2']
@@ -66,7 +67,7 @@ CACHE_PATH = os.environ['CACHE_PATH']
 MASX_store_dir = os.path.join(CACHE_PATH, '2MASX_queries')
 cache_dir = os.path.join(CACHE_PATH, 'cache')
 cutout_dir = os.path.join(CACHE_PATH, 'cutout_images')
-dataset_dir = os.path.join(os.environ['IMAGEDIR'], dataset_name)
+dataset_dir = os.path.join(temp_results, dataset_name)
 [os.makedirs(d, exist_ok=True) for d in [cache_dir, dataset_dir, cutout_dir, MASX_store_dir]]
 
 
@@ -205,19 +206,19 @@ for field_idx, (field_name, field_folder, local_field_folder, field_path, field_
         c.set_lofarname_DR2(os.path.join(field_path))
 
     # Saving cut-out list to pickle
-    with open(os.path.join(local_field_folder, list_name + '.pkl'), 'wb') as output:
+    with open(os.path.join(temp_results, list_name + '.pkl'), 'wb') as output:
         pickle.dump(cutout_list, output, pickle.HIGHEST_PROTOCOL)
-    print(f'Saved list to {field_name}/{list_name}.pkl')
+    print(f'Saved list to {temp_results}/{list_name}.pkl')
     # Saving name list 
-    with open(os.path.join(local_field_folder, list_name + '_name_list.pkl'), 'wb') as output:
+    with open(os.path.join(temp_results, list_name + '_name_list.pkl'), 'wb') as output:
         pickle.dump(new_name_list, output, pickle.HIGHEST_PROTOCOL)
-    print(f'Name list saved to {field_name}/{list_name}_name_list.pkl')
+    print(f'Name list saved to {temp_results}/{list_name}_name_list.pkl')
     field_indices.append(field_idx)
     if len(field_indices) >= n_fields:
         break
 
     # save stats
-    np.savez(os.path.join(local_field_folder, 'selected_sources_stats.npz'), names=names, total_fluxes=total_fluxes,
+    np.savez(os.path.join(temp_results, 'selected_sources_stats.npz'), names=names, total_fluxes=total_fluxes,
              peak_fluxes=peak_fluxes, source_sizes=source_sizes)
 
 # Save field ranges

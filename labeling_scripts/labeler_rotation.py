@@ -19,7 +19,7 @@ from skimage.util import crop
 import time
 import sqlite3
 
-DATA_PATH = os.environ['IMAGEDIR']
+DATA_PATH = os.environ['TEMP_RESULTS']
 CACHE_DIR = os.environ['CACHE_PATH']
 os.makedirs(CACHE_DIR, exist_ok=True)
 # Create cutout directory if it does not exist yet
@@ -147,13 +147,13 @@ if __name__ == '__main__':
     for field_name, field_folder, field_path, field_cat in zip(field_names,
                                                                field_folders, field_paths, field_cats):
 
-        pickle_labeled_annotated_path = os.path.join(field_folder, pickle_name_labeled_annotated)
+        pickle_labeled_annotated_path = os.path.join(DATA_PATH, pickle_name_labeled_annotated)
 
         # Load field specific source list
         if not os.path.exists(pickle_labeled_annotated_path) or overwrite:
             # Import cut-out objects
             pickle_name = argv[2] + '.pkl'
-            pickle_path = os.path.join(field_folder, pickle_name)
+            pickle_path = os.path.join(DATA_PATH, pickle_name)
 
             print(f'Opening {pickle_path}')
             with open(pickle_path, 'rb') as input:
