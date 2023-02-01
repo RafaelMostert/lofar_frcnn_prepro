@@ -58,6 +58,7 @@ temp_results = os.getenv('TEMP_RESULTS')
 assert not temp_results in ['train', 'val', 'test'], \
     "root dataset directory name should not be \'train\', \'val\' or \'test\'."
 field = os.getenv('FIELD')
+temp = os.getenv('TEMP_RESULTS')
 local_dr2_path = os.environ['LOCAL_MOSAICS_PATH_DR2']
 gbc_predictions_path = os.environ['LIKELY_UNRESOLVED_CATALOGUE']
 cat_filename = os.getenv('SRL_NAME').replace('.fits', '.h5') #'mosaic-blanked.cat.fits'
@@ -136,7 +137,7 @@ if exclude_DR1_area:
 
 tally_total,tally_in_vac=0,0
 field_paths = [os.path.join(p, field_filename) for p in field_folders]
-field_cat_paths = [os.path.join(p, cat_filename) for p in field_folders]
+field_cat_paths = [os.path.join(temp, cat_filename) for p in field_folders]
 # save fields and paths for subsequent scripts
 field_indices = []
 for field_idx, (field_name, field_folder, local_field_folder, field_path, field_cat_path) in enumerate(zip(field_names,

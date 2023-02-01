@@ -10,20 +10,22 @@ import sys
 import os
 
 field_dir = os.getenv('FIELD_DATA')
+temp = os.getenv("TEMP_RESULTS")
 overwrite = bool(int(os.getenv('PIPE_OVERWRITE')))
 # unwrap given paths
-cat_paths = [os.path.join(field_dir,f) for f in [os.getenv('SRL_NAME'), os.getenv('GAUS_NAME'),
-    os.getenv('SRL_LR_NAME'),os.getenv('GAUS_LR_NAME')]]
-if all([os.path.exists(c.replace('.fits','.h5')) for c in cat_paths]) and not overwrite:
+cat_paths = [os.path.join(field_dir,f) for f in [os.getenv('SRL_NAME'),
+    os.getenv('GAUS_NAME')]] #,os.getenv('SRL_LR_NAME'),os.getenv('GAUS_LR_NAME')]]
+cat_out_paths = [os.path.join(temp,f.replace('.fits','.h5')) for f in [os.getenv('SRL_NAME'),
+    os.getenv('GAUS_NAME')]] #,os.getenv('SRL_LR_NAME'),os.getenv('GAUS_LR_NAME')]]
+if all([os.path.exists(c) for c in cat_out_paths]) and not overwrite:
     print("DONE: Converted catalogues from fits to HDF5.")
 print("Attempting to convert the following files to HDF5:", cat_paths)
 
-for cat_path in cat_paths:
+for cat_path, cat_out in zip(cat_paths, cat_out_paths):
     start = time.time()
     if cat_path.endswith('.fits'):
-        cat_path_hdf = cat_path.replace('.fits', '.h5')
-        if os.path.exists(cat_path_hdf) and not overwrite:
-            print("Skipping as HDF5 version already exists:", cat_path_hdf)
+        if os.path.exists(cat_out) and not overwrite:
+            print("Skipping as HDF5 version already exists:", cat_out)
             continue
         if os.path.getsize(cat_path)/1024**3 > 10:
             print("Skipping as fits file is too big:", os.path.getsize(cat_path)/1024**3,'GB')
@@ -36,5 +38,5 @@ for cat_path in cat_paths:
             cat[col] = str_df[col]
 
     # Write to hdf5
-    cat.to_hdf(cat_path_hdf, 'df')
+    cat.to_hdf(cat_out, 'df')
 

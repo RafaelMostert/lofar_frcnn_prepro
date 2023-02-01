@@ -74,7 +74,7 @@ if __name__ == '__main__':
         #except:
         #    lt = pd.read_hdf(os.environ['LOTSS_RAW_CATALOGUE_DR2'], 'df')
         #compcat = lt
-        compcat = pd.read_hdf(os.path.join(os.getenv('FIELD_DATA'),os.getenv('SRL_NAME').replace('.fits','.h5')))
+        compcat = pd.read_hdf(os.path.join(os.getenv('TEMP_RESULTS'),os.getenv('SRL_NAME').replace('.fits','.h5')))
 
     # Load catalogue containing likely unresolved sources to remove them later
     if os.path.exists(UNRESOLVED_PATH):
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         else:
             print("Loading DR2 gaussian catalogue")
             #gauss_cat = pd.read_hdf(os.environ['LOTSS_GAUSS_CATALOGUE_DR2'])
-            gauss_cat = pd.read_hdf(os.path.join(os.getenv('FIELD_DATA'),os.getenv('GAUS_NAME').replace('.fits','.h5')))
+            gauss_cat = pd.read_hdf(os.path.join(os.getenv('TEMP_RESULTS'),os.getenv('GAUS_NAME').replace('.fits','.h5')))
 
         # Turn Gauss cat into dict
         gauss_dict = {s: [] for s in gauss_cat['Source_Name'].values}
